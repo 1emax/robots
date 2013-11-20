@@ -1,13 +1,13 @@
 <?php
 
-$dataFile = 'data.json';
-$arrData = readDataFile();
+$dataFile = 'list.json';
+$arrData = readDataFile($dataFile) ? readDataFile($dataFile) : makeNewFile($dataFile);
 
 if (isset($_POST['ajax'])) {
 	$ajaxQuery = jsonToArr($_POST['ajax']);
 
 	header('Access-Control-Allow-Origin: *');
-	if ($ajaxQuery['method'] == 'add') echo ajaxAdd($ajaxQuery['data']); 
+	if ($ajaxQuery['method'] == 'add') echo ajaxAdd($ajaxQuery['data'], $dataFile); 
 	if ($ajaxQuery['method'] == 'read') echo $arrData;	
 } 
 
@@ -17,6 +17,7 @@ function title() {
 }
 
 function sitesCol() {
+	global $dataFile;
 
 	$dataArr = array();
 	$indx = count($dataArr);
@@ -27,24 +28,23 @@ function sitesCol() {
 	// var_dump( addToArr($dataArr[$indx]) );
 
 	echo '<br><br>' ;
-	var_dump( readDataFile() );
-	// saveDataFile(json_encode($dataArr));
+	var_dump( readDataFile($dataFile) );
+	// saveDataFile(json_encode($dataArr), $dataFile);
 }
 
 function findCol() {
 	return false;
 } 
 
-function saveDataFile($data) {
-	global $dataFile;
+function saveDataFile($data, $dataFile) {
 	$f = fopen($dataFile, 'w');
 	fwrite($f, $data);
 	fclose($f);
 }
 
-function readDataFile() {
-	global $dataFile;
-	if (!is_readable($dataFile)) return 'Not exist';
+function readDataFile($dataFile) {
+
+	if (!is_readable($dataFile)) return false;
 	$data = file_get_contents($dataFile);
 	return jsonToArr($data);
 }
@@ -67,21 +67,25 @@ function robotsIsExst($name, $whereArr) {
 	return false;
 }
 
-function writeData($dataArr) {
-	$newArr = addToArr($dataArr);
-	saveDataFile(json_encode($newArr));
+function writeData($newDataArr, $dataFile) {
+	$newArr = addToArr($newDataArr);
+	saveDataFile(json_encode($newArr), $dataFile);
 }
 
-function ajaxAdd($siteAddData) {
+function ajaxAdd($siteAddData, $dataFile) {
 	global $arrDatal;
 
 	if (robotsIsExst($siteAddData['robourl'], $arrData)) {
 		return 'Robots.txt is already exist.';
 	} else {
-		writeData($siteData);
+		writeData($siteData, $dataFile);
 		return 'Robots.txt added.';
 	}
 
+}
+
+function makeNewFile($name) {
+	saveDataFile('[]', $name);
 }
 
 //function ajaxRead() {

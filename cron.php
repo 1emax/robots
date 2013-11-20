@@ -3,6 +3,9 @@
 
 require 'index.php';
 
+$listSites = $arrData;
+$robotsDataFile = 'data.json';
+
 function checkVer($sitesArray) {
 	$i = 0;
 	foreach ($sitesArray as $index => $siteData) {
@@ -12,17 +15,34 @@ function checkVer($sitesArray) {
 	}
 }
 
-checkVer($arrData);
+checkVer($listSites);
+
+// $robotsUrl, $robotsDataFile
+function compareRobots($robotUrl, $dataFile) {
+	$robotsData = readDataFile($dataFile);
+	$robotsRemote = file_get_contents($robourl);
+
+	if ($robotsRemote == $robotsData->$robotUrl) {
+		echo 'All the same';
+	} else {
+		echo 'Files are different';
+	}
+}
+
+function addRobotsData($data, $robourl, $dataFile) {
+	$existData = readDataFile($dataFile) ? readDataFile($dataFile) : makeNewFile($dataFile);
+	
+}
 
 /*
-print_r($arrData[0]);
-foreach ($arrData[0] as $key => $value) {
+print_r($listSites[0]);
+foreach ($listSites[0] as $key => $value) {
 	var_dump($key);
 	echo '<br><br>';
 	var_dump($value);
 }
 echo '<br><br><br>';
-echo $arrData[0]->site;
+echo $listSites[0]->site;
 */
 echo '<br>5';
 
