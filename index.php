@@ -1,6 +1,14 @@
 <?php
 
 $dataFile = 'data.json';
+$arrData = readDataFile();
+
+if (isset($_POST['ajax'])) {
+	$ajaxQuery = jsonToArr($_POST['ajax']));
+	
+	if ($ajaxQuery['method'] == 'add') 
+} 
+//header('Access-Control-Allow-Origin: *');
 
 function title() {
 	echo 'Robots.txt checker';
@@ -36,17 +44,23 @@ function readDataFile() {
 	global $dataFile;
 	if (!is_readable($dataFile)) return 'Not exist';
 	$data = file_get_contents($dataFile);
-	return strToJSON($data);
+	return jsonToArr($data);
 }
 
-function strToJSON($str) {
+function jsonToArr($str) {
 	return json_decode($str);
 }
 
 function addToArr($newDataArray) {
-	$extdArr = readDataFile();
+	global $arrData;
+	$extdArr = $arrData;
 	$extdArr[] = $newDataArray;
 	return $extdArr;
+}
+
+function writeData($dataArr) {
+	$newArr = addToArr($dataArr);
+	saveDataFile(json_encode($newArr));
 }
 
 ?>
