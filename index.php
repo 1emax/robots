@@ -5,10 +5,12 @@ $arrData = readDataFile();
 
 if (isset($_POST['ajax'])) {
 	$ajaxQuery = jsonToArr($_POST['ajax']));
-	
-	if ($ajaxQuery['method'] == 'add') 
+
+	header('Access-Control-Allow-Origin: *');
+	if ($ajaxQuery['method'] == 'add') echo ajaxAdd($ajaxQuery['data']); 
+	if ($ajaxQuery['method'] == 'read') echo $arrData;	
 } 
-//header('Access-Control-Allow-Origin: *');
+
 
 function title() {
 	echo 'Robots.txt checker';
@@ -22,7 +24,7 @@ function sitesCol() {
 	$dataArr[$indx]['robourl'] = 'http://robots.txt';
 	$dataArr[$indx]['email'] = 'me@mail.ru';	
 
-	var_dump( addToArr($dataArr[$indx]) );
+	// var_dump( addToArr($dataArr[$indx]) );
 
 	echo '<br><br>' ;
 	var_dump( readDataFile() );
@@ -58,9 +60,32 @@ function addToArr($newDataArray) {
 	return $extdArr;
 }
 
+function robotsIsExst($name, $whereArr) {
+	foreach ($whereArr as $key => $siteData) {
+		if ($siteData['robourl'] == $name) return true;
+	}
+	return false;
+}
+
 function writeData($dataArr) {
 	$newArr = addToArr($dataArr);
 	saveDataFile(json_encode($newArr));
 }
+
+function ajaxAdd($siteAddData) {
+	global $arrDatal;
+
+	if (robotsIsExst($siteAddData['robourl'], $arrData)) {
+		return 'Robots.txt is already exist.';
+	} else {
+		writeData($siteData);
+		return 'Robots.txt added.'
+	}
+
+}
+
+//function ajaxRead() {
+//	return false;
+//}
 
 ?>
