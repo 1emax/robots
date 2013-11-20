@@ -4,7 +4,7 @@ $dataFile = 'data.json';
 $arrData = readDataFile();
 
 if (isset($_POST['ajax'])) {
-	$ajaxQuery = jsonToArr($_POST['ajax']));
+	$ajaxQuery = jsonToArr($_POST['ajax']);
 
 	header('Access-Control-Allow-Origin: *');
 	if ($ajaxQuery['method'] == 'add') echo ajaxAdd($ajaxQuery['data']); 
@@ -79,7 +79,7 @@ function ajaxAdd($siteAddData) {
 		return 'Robots.txt is already exist.';
 	} else {
 		writeData($siteData);
-		return 'Robots.txt added.'
+		return 'Robots.txt added.';
 	}
 
 }
